@@ -8,7 +8,7 @@ function send(){
     $.ajax({
         type:'POST',
         url:'/cart/send',
-        data: {'productId':{{$model->getColumnByName('id')}},
+        data: {'productId': {{$model->getColumnByName('id')}},
                'action'   :'a',
                'count'    :1},
         headers: {
@@ -19,6 +19,22 @@ function send(){
         }
     });
 }
+
+function sendComment(){
+    $.ajax({
+        type:'POST',
+        url:'/product/{{$model->getColumnByName('id')}}/comment',
+        data: {'name':$('#name').val(),
+               'text':$('#text').val()},
+        headers: {
+            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+        },
+        success:function(data){
+            $("#enterCommentBlock").html(data);
+        }
+    });
+}
+
 </script>
 @endsection
 
@@ -61,18 +77,20 @@ function send(){
                         @include('product.comment', ['comment' => $comment])
                     @endforeach
                 </div>
-                <form name="comment">
-                    <p>
-                        <b>Ваше имя:</b><br>
-                        <input type="text" name="name" size="40">
-                    </p>
-                    <p>Комментарий<Br>
-                        <textarea name="comment" cols="40" rows="3"></textarea></p>
-                    <p>
-                        <input type="submit" value="Отправить">
-                        <input type="reset" value="Очистить">
-                    </p>
-                </form>
+                <div id="enterCommentBlock">
+                    <form name="comment">
+                        <p>
+                            <b>Ваше имя:</b><br>
+                            <input type="text" name="name" id="name" size="40">
+                        </p>
+                        <p>Комментарий<Br>
+                            <textarea name="comment" id="text" cols="40" rows="3"></textarea></p>
+                        <p>
+                            <input type="button" value="Отправить" onClick = "sendComment()" />
+                            <input type="reset" value="Очистить">
+                        </p>
+                    </form>
+                </div>
             </td>
         </tr>
         </table>

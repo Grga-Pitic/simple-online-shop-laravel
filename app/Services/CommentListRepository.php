@@ -20,4 +20,12 @@ class CommentListRepository {
 
         return $models;
     }
+
+    public function saveOneById(CommentModel $model, int $productId){
+        DB::table('comments')->insertGetId([
+            'name' => $model->getName(),
+            'text' => $model->getText(),
+            'product_id' => $productId
+        ]);
+    }
 }

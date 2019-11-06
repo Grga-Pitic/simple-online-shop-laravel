@@ -17,9 +17,12 @@ Route::get('/', function () {
 
 Route::get('/product/{id?}', 'Product\ProductController@show')->where('name', '[0-9]+');
 
+Route::post('/product/{id}/comment', 'Ajax\CommentController@send');
+
 Route::post('/cart/send', 'Ajax\CartController@send');
 
 Route::post('/cart/edit', 'Ajax\CartController@edit');
+
 Route::get('/cart/clear', 'Ajax\CartController@clear');
 
 Route::get('/catalog', 'Product\CatalogController@show');
