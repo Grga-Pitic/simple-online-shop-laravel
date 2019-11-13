@@ -5,7 +5,7 @@
             <!-- single-product-wrap start -->
             <div class="single-product-wrap">
                 <div class="product-image">
-                    <a href="/product/{{$product->getColumnByName('id')}}"><img src="assets/images/product/product-06.jpg" alt="Produce Images"></a>
+                    <a href="/product/{{$product->getColumnByName('id')}}"><img src="/assets/images/product/product-06.jpg" alt="Produce Images"></a>
                     <span class="label">{{$product->getColumnByName('discount')}}% Off</span>
                     <div class="product-action">
                         <a onclick="send({{$product->getColumnByName('id')}})" class="add-to-cart"><i class="ion-bag"></i></a>
