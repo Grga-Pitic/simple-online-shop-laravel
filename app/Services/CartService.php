@@ -14,23 +14,21 @@ class CartService {
     	switch ($action) {
     		case 'a':  // add action
     			$this->add($model, $productId, $count);
-    			break;
-
+                break;
     		case 'r':  // remove action
                 $this->remove($model, $productId, $count);
                 break;
 
             case 'ra':  // removeAll action
+                $quantityBeforeRemoving = $model->getDataArray()[$productId];
                 $this->removeAll($model, $productId);
-                break;
+                return $quantityBeforeRemoving;
     		
     		default:
     			# code...
     			break;
     	}
-
     	$model->saveChanges();
-
 	}
 
 	private function add(CartModel $model, int $productId, int $count){

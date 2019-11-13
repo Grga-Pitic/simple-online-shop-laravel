@@ -14,13 +14,25 @@ class CatalogController extends Controller {
         $container = app();
         $repository = $container->make(ProductRepository::class);
         $service     = $container->make(ProductListService::class);
-        $listContoller = $container->make(ProductListController::class);
 
-        // $parameters  = $service->readParams($request);
-        // $productList = $repository->getProductsArray($parameters);
+        $requestParameters  = $service->readParameters($request);
+        $requestParameters  = $service->setDefaultParameters($requestParameters);
+        $productList = $repository->getProductsArray($requestParameters);
+        $this->getDataForHeader($container);
 
-        $listHtmlCode = $listContoller->show($request);//view('catalog.list', ['productList' => $productList]);
-        return view('catalog.main', ['list' => $listHtmlCode]);
+        $this->putParameter('productList', $productList->getArray());
+        $this->putParameter('listSize', $productList->getSize());
+        $this->putParameter('currentPage', $requestParameters['page']);
+        $this->putParameter('pageSize', $requestParameters['productCount']);
+        $this->putParameter('pagesQuantity', $service->getPagesQuantity(
+                                                            $requestParameters['productCount'],
+                                                            $productList->getSize()
+        ));
+        $this->putParameter('maxPrice', $repository->getMaxPrice());
+
+
+        $parameters = $this->getParameters();
+        return view('bootstrap.catalog.page', $parameters);
 
     }
 }

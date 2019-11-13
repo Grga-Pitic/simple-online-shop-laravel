@@ -12,7 +12,7 @@ class ProductListResult {
 		$this->size = $size;
 	}
 
-	public function getList(){
+	public function getArray(){
 		return $this->list;
 	} 
 

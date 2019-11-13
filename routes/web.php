@@ -11,22 +11,22 @@
 |
 */
 
-Route::get('/', function () {
-    return view('template');
-});
+Route::get('/', 'Home\HomepageController@show');
 
 Route::get('/product/{id?}', 'Product\ProductController@show')->where('name', '[0-9]+');
 
-Route::post('/product/{id}/comment', 'Ajax\CommentController@send');
-
-Route::post('/cart/send', 'Ajax\CartController@send');
-
-Route::post('/cart/edit', 'Ajax\CartController@edit');
-
-Route::get('/cart/clear', 'Ajax\CartController@clear');
+Route::get('/cart', 'Cart\CartController@show');
 
 Route::get('/catalog', 'Product\CatalogController@show');
 
+// ajax routes
+
+Route::post('/product/{id}/comment', 'Ajax\CommentController@send');
+
 Route::get('/catalog/page', 'Ajax\ProductListController@show');
 
-Route::get('/cart', 'Cart\CartController@show');
+Route::post('/cart/quickAdd', 'Ajax\CartController@quickAdd');
+
+Route::post('/cart/edit', 'Ajax\CartController@edit');
+
+Route::post('/cart/remove', 'Ajax\CartController@remove');

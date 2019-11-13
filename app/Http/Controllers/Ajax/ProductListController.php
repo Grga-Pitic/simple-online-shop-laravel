@@ -18,8 +18,8 @@ class ProductListController extends Controller{
         $parameters  = $service->setDefaultParameters($parameters);
         $productList = $repository->getProductsArray($parameters);
 
-        return view('catalog.list', [
-        	'productList' => $productList->getList(), 
+        return view('bootstrap.catalog.list.wrap', [
+        	'productList' => $productList->getArray(),
         	'listSize' => $productList->getSize(),
         	'currentPage' => $parameters['page'],
         	'pageSize' => $parameters['productCount'],

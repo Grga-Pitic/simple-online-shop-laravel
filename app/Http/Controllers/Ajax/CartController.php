@@ -9,7 +9,7 @@ use App\Services\CartService;
 use App\Services\Product\ProductRepository;
 
 class CartController extends Controller {
-    public function send(Request $request) {
+    public function quickAdd(Request $request) {
     	$container = app();
     	$model     = $container->make(CartModel::class); 
     	$service   = $container->make(CartService::class);
@@ -25,18 +25,34 @@ class CartController extends Controller {
     	$service   = $container->make(CartService::class);
         $productRepository = $container->make(ProductRepository::class);
 
-        $service->do($request, $model);
-        $cartData = $model->getDataArray();
-
         $productId = $request->input("productId");
-        if(!isset($cartData[$productId])){
-            return view('cart.deleted');
-        }
 
         $product = $productRepository->getProductById($productId);
-        $productQuantiry = $cartData[$productId];
+        $productQuantity = $request->input('count');
+        $model->edit($productId, $productQuantity);
+        $model->saveChanges();
 
-        return view('cart.field', ['product' => $product, 'quantity' => $productQuantiry]);
+        return view('bootstrap.cart.row', ['product' => $product, 'quantity' => $productQuantity]);
+    }
+
+    public function remove(Request $request){
+        $container = app();
+        $model     = $container->make(CartModel::class);
+        $productRepository = $container->make(ProductRepository::class);
+
+        $productId = $request->input("productId");
+        $quantityBeforeDeleting = $model->getDataArray()[$productId];
+
+        $model->removeAll($productId);
+        $model->saveChanges();
+
+        $product = $productRepository->getProductById($productId);
+
+        return view('bootstrap.cart.messages.rowDeleted',  [
+            'product' => $product,
+            'quantity' => $quantityBeforeDeleting
+        ]);
+
     }
 
     public function clear() {

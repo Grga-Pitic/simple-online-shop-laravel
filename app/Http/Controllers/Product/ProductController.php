@@ -9,7 +9,6 @@ use App\Services\CommentListRepository;
 
 class ProductController extends Controller {
 	public function show(int $id = null){
-
 		try {
 			$container  = app();
 			$productRepository = $container->make(ProductRepository::class);
@@ -17,10 +16,14 @@ class ProductController extends Controller {
 
 			$model       = $productRepository->getProductByID($id);
 			$commentList = $commentRepository->getListByProductId($id);
-			return view('product', [
-			    'model' => $model,
-                'commentList' => $commentList
-            ]);
+
+			$this->getDataForHeader($container);
+			$this->putParameter('product', $model);
+			$this->putParameter('commentList', $commentList);
+
+			$parameters = $this->getParameters();
+
+			return view('bootstrap.product.page', $parameters);
 		} catch (\UnderflowException $e){
 			abort(404);
 		}

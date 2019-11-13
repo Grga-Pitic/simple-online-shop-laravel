@@ -20,7 +20,7 @@ class ProductSqlRepository implements ProductRepository {
 		return $product;
 	}
 
-	function getProductsArray(array $parameters = array()) { // TODO do refactoring by splitting for a methods
+	public function getProductsArray(array $parameters = array()) {
 
 		// builds a query using a parameters
 
@@ -43,7 +43,7 @@ class ProductSqlRepository implements ProductRepository {
 		return $listObject;
 	}
 
-	function getProductsByArray(array $arrayOfId) {
+	public function getProductsByArray(array $arrayOfId) {
 		$resultProducts = array();
 		foreach ($arrayOfId as $id) {
 			$result = DB::table('product')->where('id', $id)->first();
@@ -58,6 +58,11 @@ class ProductSqlRepository implements ProductRepository {
 		return $resultProducts;
 	}
 
+    function getMaxPrice() {
+	    $maxPrice = DB::table('product')->max('price');
+	    return $maxPrice;
+    }
+
 	private function buildQuery($query, array $parameters){
 
 		$where = array();
@@ -67,20 +72,25 @@ class ProductSqlRepository implements ProductRepository {
 		}
 
 		if(isset($parameters['minPrice'])){                        // where price > minPrice
-			array_push($where, ['price', '>', $parameters['minPrice']]);
+			array_push($where, ['price', '>=', $parameters['minPrice']]);
 		}
 
 		if(isset($parameters['maxPrice'])){                        // where price < maxPrice
-			array_push($where, ['price', '<', $parameters['maxPrice']]);
+			array_push($where, ['price', '<=', $parameters['maxPrice']]);
 		}
 		
 		$query->where($where);
-		
-		$query->orderBy('price', $parameters['orderBy']); // order by price (asc|desc)
+
+		if(isset($parameters['orderBy'])){
+            $query->orderBy('price', $parameters['orderBy']); // order by price (asc|desc)
+        }
 
 	}
 
 	private function appendLimits($query, array $parameters){
+	    if(!isset($parameters['page']) || !isset($parameters['productCount'])){
+            return;
+        }
 		$minIndex = $parameters['page'] * $parameters['productCount'];
 		$query->skip($minIndex)->take($parameters['productCount']);         // limit minIndex, maxIndex
 	}

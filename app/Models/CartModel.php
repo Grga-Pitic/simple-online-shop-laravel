@@ -35,6 +35,10 @@ class CartModel {
 		}
 	}
 
+	public function edit(int $productId, int $quantity){
+        $this->data[$productId] = $quantity;
+    }
+
 	public function removeAll(int $productId){
         if(!isset($this->data[$productId])){
             return;

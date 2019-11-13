@@ -3,7 +3,7 @@
 
 @section('jscode')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="assets/js/vendor/jquery-3.3.1.min.js"></script>
 <script>
 function setFilter(page = 0){
 	let params = '?';

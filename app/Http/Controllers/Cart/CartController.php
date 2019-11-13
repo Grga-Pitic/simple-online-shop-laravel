@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Cart;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 
 use App\Models\CartModel;
 use App\Services\Product\ProductRepository;
@@ -15,15 +14,20 @@ class CartController extends Controller {
 		$container  = app();
     	$model      = $container->make(CartModel::class); 
 		$repository = $container->make(ProductRepository::class);
+        $this->getDataForHeader($container);
 
-		$cartData = $model->getDataArray();
-		
-		$productList = $repository->getProductsByArray(array_keys($cartData));
+		$productQuantity = $model->getDataArray(); // gets assoc array (key is productId value is productQuantity in the cart)
+		$productList = $repository->getProductsByArray(array_keys($productQuantity)); // gets list of product data
 
-		return view('cart.main', [
-			'productList' => $productList,
-			'productQuantityList' => $cartData
-			]);
+		$this->putParameter('productDataList', $productList);
+		$this->putParameter('productQuantityList', $productQuantity);
+
+		$parameters = $this->getParameters();
+		return view('bootstrap.cart.page', $parameters);
+//            [
+//			'productList' => $productList,
+//			'productQuantityList' => $cartData
+//			]);
 	}
 
 }

@@ -20,5 +20,7 @@ interface ProductRepository {
 	function getProductsArray(array $parameters = array());
 
 	function getProductsByArray(array $arrayOfId);
+
+	function getMaxPrice();
 	
 }
